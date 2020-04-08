@@ -22,10 +22,11 @@ class Contact
 end
 
 class ContactName
-  attr_accessor :first_name, :middle_name, :last_name, :nickname
+  attr_accessor :full_name, :first_name, :middle_name, :last_name, :nickname
 
   # Default Fields
   def initialize(first_name, middle_name, last_name, nick_name)
+    @full_name = @first_name + @middle_name + @last_name
     @first_name = first_name
     @middle_name = middle_name
     @last_name = last_name
@@ -44,27 +45,28 @@ class ContactCategory
 end
 
 class ContactNumber
-  attr_accessor :type, :number
+  attr_accessor :number_type, :digits
 
-  def initialize(type, number)
-    @type = type
-    @number = number
+  def initialize(number_type, digits)
+    @number_type = number_type
+    @digits = digits
   end
 end
 
 class ContactEmail
-  attr_accessor :type, :email
+  attr_accessor :email_type, :address
 
-  def initialize(type, email)
-    @type = type
-    @email = email
+  def initialize(email_type, address)
+    @email_type = email_type
+    @address = address
   end
 end
 
 class ContactAddress
-  attr_accessor :street, :town, :county, :postcode, :country
+  attr_accessor :full_address, :street, :town, :county, :postcode, :country
 
   def initialize(street, town, county, postcode, country)
+    @full_address = @street + ', ' + @town + ', ' + @county + ', ' + @postcode + ', ' + @country
     @street = street
     @town = town
     @county = county
@@ -82,10 +84,10 @@ class ContactBirthday
 end
 
 class ContactNote
-  attr_accessor :note
+  attr_accessor :characters
 
-  def initialize(note)
-    @note = note
+  def initialize(characters)
+    @characters = characters
   end
 end
 
@@ -105,13 +107,24 @@ class AddressBookModel
     @contacts = []
   end
 
+  def empty
+    @contact.empty?
+  end
+
   def find; end
 
   def view_all; end
 
   def view_single; end
 
-  def create(contact); end
+  def create(new_contact_details)
+    new_contact = Contact.new
+    new_contact.name.first_name = new_contact_details['general']['first_name']
+    new_contact.name.middle_name = new_contact_details['general']['middle_name']
+    new_contact.name.last_name = new_contact_details['general']['last_name']
+    new_contact.name.nick_name = new_contact_details['general']['nick_name']
+    @contacts.push(new_contact)
+  end
 
   def update; end
 
